@@ -1,0 +1,4 @@
+sentienv/
+.env
+__pycache__/
+tests/api_test.log

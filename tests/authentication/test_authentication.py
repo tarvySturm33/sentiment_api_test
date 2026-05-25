@@ -1,8 +1,20 @@
 from dotenv import load_dotenv
 from datetime import datetime as dt
 import os
+import requests
 
-from RequestBuilder import RequestBuilder
+class RequestBuilder:
+
+    def __init__(self, host='ip-172-31-41-72', port=8000):
+        self.host = host
+        self.port = port
+
+    def build_url(self, endpoint):
+        return f'http://{self.host}:{self.port}{endpoint}'
+
+    def get(self, endpoint, params=None):
+        url = self.build_url(endpoint)
+        return requests.get(url=url, params=params)
 
 # date format
 dt_ft = '%Y-%m-%d %H:%M:%S.%f'
@@ -11,7 +23,7 @@ dt_ft = '%Y-%m-%d %H:%M:%S.%f'
 
 load_dotenv()
 
-api_host = os.environ.get('HOST', '0.0.0.0')
+api_host = os.environ.get('HOST','ip-172-31-41-72')
 api_port = os.environ.get('PORT', 8000)
 
 # instantiate request builder

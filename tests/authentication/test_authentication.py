@@ -5,7 +5,7 @@ import requests
 
 class RequestBuilder:
 
-    def __init__(self, host='ip-172-31-41-72', port=8000):
+    def __init__(self, host='localhost', port=8000):
         self.host = host
         self.port = port
 
@@ -23,7 +23,7 @@ dt_ft = '%Y-%m-%d %H:%M:%S.%f'
 
 load_dotenv()
 
-api_host = os.environ.get('HOST','ip-172-31-41-72')
+api_host = os.environ.get('HOST','localhost')
 api_port = os.environ.get('PORT', 8000)
 
 # instantiate request builder
@@ -92,7 +92,7 @@ for user in test_data:
                            timestamp=dt.now().strftime(dt_ft)[:-3])
     # printing in a file
     if os.environ.get('LOG') == '1':
-        with open('api_test.log', 'a') as file:
+        with open('/api_test.log', 'a') as file:
             file.write(output)
     else:
         print(output)

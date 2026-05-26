@@ -3,18 +3,20 @@ from datetime import datetime as dt
 import os
 import requests
 
+
 class RequestBuilder:
 
-    def __init__(self, host='ip-172-31-41-72', port=8000):
+    def __init__(self, host='localhost', port=8000):
         self.host = host
         self.port = port
 
-    def build_url(self, endpoint):
-        return f'http://{self.host}:{self.port}{endpoint}'
+    def build_url(self, target, endpoint):
+        return f'http://{self.host}:{self.port}{target}{endpoint}'
 
-    def get(self, endpoint, params=None):
-        url = self.build_url(endpoint)
+    def get(self, endpoint, target, params=None):
+        url = self.build_url(endpoint, target)
         return requests.get(url=url, params=params)
+
 
 # date format
 dt_ft = '%Y-%m-%d %H:%M:%S.%f'
@@ -23,7 +25,7 @@ dt_ft = '%Y-%m-%d %H:%M:%S.%f'
 
 load_dotenv()
 
-api_host = os.environ.get('HOST', 'ip-172-31-41-72')
+api_host = os.environ.get('HOST', 'localhost')
 api_port = os.environ.get('PORT', 8000)
 
 # instantiate request builder
@@ -54,13 +56,14 @@ test_data = [
 ]
 
 # endpoint to test
-endpoint = '{}/sentiment'
+endpoint = '/sentiment'
 
 for user in test_data:
     for entry in user['entries']:
         target = entry['target']
         response = request_builder.get(
-            endpoint=endpoint.format(target),
+            target,
+            endpoint,            
             params={
                 'username': user['username'],
                 'password': user['password']
@@ -91,11 +94,12 @@ for user in test_data:
                                expected_code=entry['expected_code'],
                                usr=user['username'],
                                pwd=user['password'],
-                               endpoint=endpoint.format(target),
+                               endpoint=request_builder.build_url(target,
+                                                                  endpoint),
                                timestamp=dt.now().strftime(dt_ft)[:-3])
         # printing in a file
         if os.environ.get('LOG') == '1':
-            with open('api_test.log', 'a') as file:
+            with open('/api_test.log', 'a') as file:
                 file.write(output)
         else:
             print(output)

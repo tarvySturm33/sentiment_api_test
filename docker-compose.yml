@@ -9,22 +9,35 @@ services:
         mode: host
   
   authorization_tests:
-    image: authorization_tests:latest
+    build: ./tests/authorization
     command: python3 test_authorization.py
+    volumes:
+      - ${HOME}/exam_docker_ALONSO_LANZA/sentiment_api/api_test.log:/api_test.log 
+    environment:
+      - HOST=api
+      - LOG=1
     depends_on:
       - api
-  
+
+
   authentication_tests:
-    image: authentication_tests:latest
+    build: ./tests/authentication
     command: python3 test_authentication.py
+    environment:
+      - HOST=api
+      - LOG=1
+    volumes:
+      - ${HOME}/exam_docker_ALONSO_LANZA/sentiment_api/api_test.log:/api_test.log
     depends_on:
       - api
   
   content_tests:
-    image: content_tests:latest
+    build: ./tests/content
     command: python3 test_content.py
+    environment:
+      - HOST=api
+      - LOG=1
+    volumes:
+      - ${HOME}/exam_docker_ALONSO_LANZA/sentiment_api/api_test.log:/api_test.log
     depends_on:
       - api
-
-networks:
-  test_net:
